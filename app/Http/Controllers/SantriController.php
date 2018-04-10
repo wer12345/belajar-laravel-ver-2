@@ -7,29 +7,43 @@ use Illuminate\Http\Request;
 
 class SantriController extends Controller
 {
-    public function create()
-    {
-        return view('santri.create');
-    }
 
-    public function store(Request $request)
-    {
-        // dd($request->all());
+   public function index()
+   {
+      $santris = Santri::all();
 
-        $nama = $request->nama;
-        $umur = $request->umur;
-        $alamat = $request->alamat;
-        $jenis_kelamin = $request->jenis_kelamin;
+      return view('santri.index', compact('santris'));
+   }
 
-        Santri::create([
-            'nama' => $nama,
-            'umur' => $umur,
-            'alamat' => $alamat,
-            'jenis_kelamin' => $jenis_kelamin,
-        ]);
+   public function create()
+   {
+      return view('santri.create');
+   }
 
-        // return view('santri.create');
-        // return redirect()->url('santri/create');
-        return redirect()->route('santri.create');
-    }
+   public function store(Request $request)
+   {
+      // dd($request->all());
+      $request->validate([
+         'nama'          => 'required',
+         'umur'          => 'required',
+         'alamat'        => 'required',
+         'jenis_kelamin' => 'required'
+      ]);
+
+      $nama = $request->nama;
+      $umur = $request->umur;
+      $alamat = $request->alamat;
+      $jenis_kelamin = $request->jenis_kelamin;
+
+      Santri::create([
+         'nama'          => $nama,
+         'umur'          => $umur,
+         'alamat'        => $alamat,
+         'jenis_kelamin' => $jenis_kelamin,
+      ]);
+
+      // return view('santri.create');
+      // return redirect()->url('santri/create');
+      return redirect()->route('santri.index');
+   }
 }
